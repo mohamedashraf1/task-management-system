@@ -3,6 +3,7 @@ package banquemisr.challenge05.service;
 import banquemisr.challenge05.dto.UserDTO;
 import banquemisr.challenge05.dto.UpdateUserDTO;
 import banquemisr.challenge05.entity.User;
+import banquemisr.challenge05.errorhandling.BusinessException;
 import banquemisr.challenge05.repo.UserRepo;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +26,7 @@ public class UserService {
     public UserDTO getUser(Long userId){
         Optional<User> user = userRepo.findById(userId);
         if(user.isEmpty())
-            return null;
+            throw new BusinessException("User Not found");
 
         return modelMapper.map(user.get(), UserDTO.class);
     }
@@ -37,6 +38,10 @@ public class UserService {
     }
 
     public void deleteUser(Long userId){
+        Optional<User> user = userRepo.findById(userId);
+        if(user.isEmpty())
+            throw new BusinessException("User Not found");
+
         userRepo.deleteById(userId);
     }
 
@@ -44,7 +49,7 @@ public class UserService {
 
         User user = userRepo.findById(getLoggedUserId()).orElse(null);
         if(user == null)
-            throw new RuntimeException("this is not a valid user id");
+            throw new BusinessException("this is not a valid user id");
 
         user.setName(updateUserDTO.getName());
         user.setMobileNumber(updateUserDTO.getMobileNumber());

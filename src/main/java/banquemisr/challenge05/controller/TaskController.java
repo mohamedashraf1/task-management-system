@@ -2,6 +2,7 @@ package banquemisr.challenge05.controller;
 
 import banquemisr.challenge05.dto.TaskDTO;
 import banquemisr.challenge05.dto.TaskSearchDTO;
+import banquemisr.challenge05.errorhandling.GeneralResponse;
 import banquemisr.challenge05.service.TaskService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +19,8 @@ public class TaskController {
     TaskService taskService;
 
     @PostMapping
-    public ResponseEntity<Long> createTask(@RequestBody @Valid TaskDTO taskDTO){
-        return new ResponseEntity<>(taskService.createTask(taskDTO), HttpStatus.OK);
+    public ResponseEntity<GeneralResponse> createTask(@RequestBody @Valid TaskDTO taskDTO){
+        return new ResponseEntity<>(new GeneralResponse(taskService.createTask(taskDTO).toString()), HttpStatus.OK);
     }
 
     @GetMapping(params = "taskId")
@@ -33,8 +34,9 @@ public class TaskController {
     }
 
     @DeleteMapping
-    public void deleteTask(@RequestParam Long taskId){
+    public ResponseEntity<GeneralResponse> deleteTask(@RequestParam Long taskId){
         taskService.deleteTask(taskId);
+        return new ResponseEntity<>(new GeneralResponse("Task deleted Successfully"), HttpStatus.OK);
     }
 
     @PutMapping

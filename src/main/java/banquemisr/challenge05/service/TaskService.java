@@ -5,6 +5,7 @@ import banquemisr.challenge05.dto.TaskDTO;
 import banquemisr.challenge05.dto.TaskSearchDTO;
 import banquemisr.challenge05.entity.LoTaskStatus;
 import banquemisr.challenge05.entity.Task;
+import banquemisr.challenge05.errorhandling.BusinessException;
 import banquemisr.challenge05.repo.LoTaskStatusRepo;
 import banquemisr.challenge05.repo.TaskRepo;
 import banquemisr.challenge05.repo.UserRepo;
@@ -33,7 +34,7 @@ public class TaskService {
     public Long createTask(TaskDTO taskDTO){
         Optional<LoTaskStatus> taskStatus = loTaskStatusRepo.findById(taskDTO.getStatusId());
         if(taskStatus.isEmpty())
-            throw new RuntimeException("this is not a valid status");
+            throw new BusinessException("this is not a valid status");
 
         Task task = modelMapper.map(taskDTO, Task.class);
         task.setTaskId(null);
@@ -46,16 +47,12 @@ public class TaskService {
     public TaskDTO getTask(Long taskId){
         TaskDTO taskDTO;
         Task task = taskRepo.findById(taskId).orElse(null);
-        if(task == null)
-            return null;
+        if(task == null || !Objects.equals(task.getUserId(), getLoggedUserId()))
+            throw new BusinessException("Task not found");
 
         taskDTO = modelMapper.map(task, TaskDTO.class);
 
-        if(Objects.equals(task.getUserId(), getLoggedUserId())){
-            return taskDTO;
-        }else{
-            return null;
-        }
+        return taskDTO;
     }
 
     public List<TaskDTO> getAllTasks(){
@@ -65,32 +62,36 @@ public class TaskService {
     }
 
     public void deleteTask(Long taskId){
-        taskRepo.deleteById(taskId);
+        Optional<Task> task = taskRepo.findById(taskId);
+        if(task.isEmpty() || !Objects.equals(task.get().getUserId(), getLoggedUserId()))
+            throw new BusinessException("Task not found");
+
+        taskRepo.deleteByTaskIdAndUserId(taskId, getLoggedUserId());
     }
 
     public TaskDTO updateTask(TaskDTO taskDTO){
         if(taskDTO.getTaskId() == null)
-            return null;
+            throw new BusinessException("You must enter task id");
 
         Task task = taskRepo.findById(taskDTO.getTaskId()).orElse(null);
         if(task == null)
-            throw new RuntimeException("this is not a valid task id");
+            throw new BusinessException("this is not a valid task id");
 
         Optional<LoTaskStatus> taskStatus = loTaskStatusRepo.findById(taskDTO.getStatusId());
         if(taskStatus.isEmpty())
-            throw new RuntimeException("this is not a valid status");
+            throw new BusinessException("this is not a valid status");
 
         if(Objects.equals(task.getUserId(), getLoggedUserId())){
             task = modelMapper.map(taskDTO, Task.class);
 
             task.setStatus(taskStatus.get());
-            task.setUserId(getLoggedUserId())
-            ;
+            task.setUserId(getLoggedUserId());
+
             task = taskRepo.save(task);
 
             return modelMapper.map(task, TaskDTO.class);
         }else {
-            return null;
+            throw new BusinessException("this is not a valid task id");
         }
     }
 

@@ -1,6 +1,7 @@
 package banquemisr.challenge05.util;
 
 import banquemisr.challenge05.constants.Constant;
+import banquemisr.challenge05.errorhandling.BusinessException;
 import lombok.extern.log4j.Log4j2;
 import org.apache.logging.log4j.ThreadContext;
 import org.modelmapper.ModelMapper;
@@ -15,7 +16,7 @@ public class Util {
         if (userId != null && !userId.isEmpty()) {
             return Long.valueOf(userId);
         }
-        throw new RuntimeException("userId not available");
+        throw new BusinessException("userId not available");
     }
 
 

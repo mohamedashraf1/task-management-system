@@ -2,6 +2,7 @@ package banquemisr.challenge05.controller;
 
 import banquemisr.challenge05.dto.UserDTO;
 import banquemisr.challenge05.dto.UpdateUserDTO;
+import banquemisr.challenge05.errorhandling.GeneralResponse;
 import banquemisr.challenge05.service.AuthService;
 import banquemisr.challenge05.service.UserService;
 import jakarta.validation.Valid;
@@ -31,8 +32,9 @@ public class UserController {
     }
 
     @DeleteMapping
-    public void deleteUser(@RequestParam Long userId){
+    public ResponseEntity<GeneralResponse> deleteUser(@RequestParam Long userId){
         userService.deleteUser(userId);
+        return new ResponseEntity<>(new GeneralResponse("User deleted Successfully"), HttpStatus.OK);
     }
 
     @PutMapping
@@ -41,9 +43,8 @@ public class UserController {
     }
 
     @PostMapping("/admin")
-    ResponseEntity<UserDTO> addAdminUser(@RequestParam Long userId) {
+    public ResponseEntity<UserDTO> addAdminUser(@RequestParam Long userId) {
         UserDTO userDto = authService.addAdminUser(userId);
-        return new ResponseEntity<>(userDto, HttpStatus.OK
-        );
+        return new ResponseEntity<>(userDto, HttpStatus.OK);
     }
 }

@@ -8,6 +8,7 @@ import banquemisr.challenge05.dto.LoginDto;
 import banquemisr.challenge05.dto.UserDTO;
 import banquemisr.challenge05.entity.Role;
 import banquemisr.challenge05.entity.User;
+import banquemisr.challenge05.errorhandling.BusinessException;
 import banquemisr.challenge05.repo.RoleRepo;
 import banquemisr.challenge05.repo.UserRepo;
 import lombok.RequiredArgsConstructor;
@@ -58,7 +59,7 @@ public class AuthService {
     public UserDTO addAdminUser(Long userId) {
         User user = userRepo.findById(userId).orElse(null);
         if(user == null)
-            throw new RuntimeException("User not found");
+            throw new BusinessException("User not found");
 
         Role r = roleRepo.findById(2L).orElseThrow();
         List<Role> roles = new ArrayList<>();
@@ -73,11 +74,11 @@ public class AuthService {
     public JwtTokenDto login(LoginDto loginDTO) {
         Optional<User> user = userRepo.findByEmail(loginDTO.getEmail());
         if (user.isEmpty())
-            throw new RuntimeException("Invalid input credentials");
+            throw new BusinessException("Invalid input credentials");
 
         boolean isCorrectPassword = verifyPassword(loginDTO.getPassword(), user.get().getPassword());
         if (!isCorrectPassword)
-            throw new RuntimeException("Invalid input credentials");
+            throw new BusinessException("Invalid input credentials");
 
         return jwtService.generateTokensByUser(user.get());
     }
@@ -86,10 +87,10 @@ public class AuthService {
 
         try {
             if (jwtService.isTokenExpired(accessToken) || jwtService.isTokenExpired(refreshToken)) {
-                throw new RuntimeException("Tokens are invalid");
+                throw new BusinessException("Tokens are invalid");
             }
         } catch (Exception e) {
-            throw new RuntimeException("Tokens are invalid");
+            throw new BusinessException("Tokens are invalid");
         }
 
         return jwtService.generateTokens(jwtService.extractAllClaimsExpired(accessToken));

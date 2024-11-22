@@ -1,20 +1,18 @@
-package banquemisr.challenge05.exception;
+package banquemisr.challenge05.errorhandling;
 
-import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.net.URI;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 @RestControllerAdvice
 public class TaskManagementExceptionHandler {
@@ -51,5 +49,31 @@ public class TaskManagementExceptionHandler {
         }
 
         return errors;
+    }
+
+    @ExceptionHandler(BusinessException.class)
+    @ResponseBody
+    public ResponseEntity<ErrorResponse> handleBusinessException(BusinessException e) {
+
+        ErrorResponse errorResponse = new ErrorResponse();
+        errorResponse.setMessage(e.getMessage());
+        Date date = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy h:mm:ss a");
+        errorResponse.setTimestamp(sdf.format(date));
+
+        return new ResponseEntity<>(errorResponse, e.getHttpStatus() != null ? e.getHttpStatus() : HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler({Exception.class, Throwable.class})
+    @ResponseBody
+    public ResponseEntity<ErrorResponse> handleGeneralException(BusinessException e) {
+
+        ErrorResponse errorResponse = new ErrorResponse();
+        errorResponse.setMessage(e.getMessage());
+        Date date = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy h:mm:ss a");
+        errorResponse.setTimestamp(sdf.format(date));
+
+        return new ResponseEntity<>(errorResponse, e.getHttpStatus() != null ? e.getHttpStatus() : HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
