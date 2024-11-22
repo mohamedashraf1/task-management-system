@@ -1,6 +1,7 @@
 package banquemisr.challenge05.controller;
 
 import banquemisr.challenge05.dto.TaskDTO;
+import banquemisr.challenge05.dto.TaskSearchDTO;
 import banquemisr.challenge05.service.TaskService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,5 +40,10 @@ public class TaskController {
     @PutMapping
     public ResponseEntity<TaskDTO> updateTask(@RequestBody @Valid TaskDTO taskDTO){
         return new ResponseEntity<>(taskService.updateTask(taskDTO), HttpStatus.OK);
+    }
+
+    @PostMapping("/search")
+    public ResponseEntity<List<TaskDTO>> search(@RequestBody @Valid TaskSearchDTO criteria){
+        return new ResponseEntity<>(taskService.search(criteria), HttpStatus.OK);
     }
 }

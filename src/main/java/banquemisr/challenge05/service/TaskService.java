@@ -1,6 +1,8 @@
 package banquemisr.challenge05.service;
 
+import banquemisr.challenge05.dao.TaskDAO;
 import banquemisr.challenge05.dto.TaskDTO;
+import banquemisr.challenge05.dto.TaskSearchDTO;
 import banquemisr.challenge05.entity.LoTaskStatus;
 import banquemisr.challenge05.entity.Task;
 import banquemisr.challenge05.repo.LoTaskStatusRepo;
@@ -26,7 +28,7 @@ public class TaskService {
     @Autowired
     LoTaskStatusRepo loTaskStatusRepo;
     @Autowired
-    UserRepo userRepo;
+    TaskDAO taskDAO;
 
     public Long createTask(TaskDTO taskDTO){
         Optional<LoTaskStatus> taskStatus = loTaskStatusRepo.findById(taskDTO.getStatusId());
@@ -90,5 +92,9 @@ public class TaskService {
         }else {
             return null;
         }
+    }
+
+    public List<TaskDTO> search(TaskSearchDTO criteria){
+        return taskDAO.search(criteria);
     }
 }
