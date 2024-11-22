@@ -31,5 +31,10 @@ public class User {
     @OneToMany
     @JoinColumn(name = "USER_ID")
     List<Task> userTasks;
+    @ManyToMany
+    @JoinTable(name = "USER_ROLE",
+            joinColumns = @JoinColumn(name = "USER_ID"),
+            inverseJoinColumns = @JoinColumn(name = "ROLE_ID"))
+    List<Role> roles;
 
 }
