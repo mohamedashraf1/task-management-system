@@ -2,6 +2,7 @@ package banquemisr.challenge05.controller;
 
 import banquemisr.challenge05.dto.UserDTO;
 import banquemisr.challenge05.dto.UserDataDTO;
+import banquemisr.challenge05.service.AuthService;
 import banquemisr.challenge05.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,8 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
     @Autowired
     UserService userService;
+    @Autowired
+    AuthService authService;
 
     @PostMapping
     public ResponseEntity<Long> createUser(@RequestBody @Valid UserDTO userDTO){
@@ -33,5 +36,12 @@ public class UserController {
     @PutMapping
     public ResponseEntity<UserDTO> updateUser(@RequestBody @Valid UserDataDTO userDTO){
         return new ResponseEntity<>(userService.updateUser(userDTO), HttpStatus.OK);
+    }
+
+    @PostMapping("/admin")
+    ResponseEntity<UserDTO> addAdminUser(@RequestParam Long userId) {
+        UserDTO userDto = authService.addAdminUser(userId);
+        return new ResponseEntity<>(userDto, HttpStatus.OK
+        );
     }
 }

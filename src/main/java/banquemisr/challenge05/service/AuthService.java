@@ -17,7 +17,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 
@@ -44,13 +46,29 @@ public class AuthService {
 
         // default role is user
         Role r = roleRepo.findById(Constant.USER_ROLE).orElseThrow();
-        user.setRoles(Collections.singletonList(r));
+        List<Role> roles = new ArrayList<>();
+        roles.add(r);
+        user.setRoles(roles);
 
         user = userRepo.save(user);
 
         return modelMapper.map(user, UserDTO.class);
     }
 
+    public UserDTO addAdminUser(Long userId) {
+        User user = userRepo.findById(userId).orElse(null);
+        if(user == null)
+            throw new RuntimeException("User not found");
+
+        Role r = roleRepo.findById(2L).orElseThrow();
+        List<Role> roles = new ArrayList<>();
+        roles.add(r);
+        user.setRoles(roles);
+
+        user = userRepo.save(user);
+
+        return modelMapper.map(user, UserDTO.class);
+    }
 
     public JwtTokenDto login(LoginDto loginDTO) {
         Optional<User> user = userRepo.findByEmail(loginDTO.getEmail());

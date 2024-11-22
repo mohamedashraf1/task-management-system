@@ -21,6 +21,8 @@ public class AuthConfig {
                 .cors(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers("/user/**").hasAuthority("admin")
+                        .requestMatchers("/task/**").hasAnyAuthority("admin", "user")
                         .anyRequest().authenticated())
                 .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
