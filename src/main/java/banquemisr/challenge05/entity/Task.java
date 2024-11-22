@@ -17,6 +17,8 @@ public class Task {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "TASK_ID")
     private Long taskId;
+    @Column(name = "USER_ID")
+    private Long userId;
     @Column(name = "TITLE")
     private String title;
     @Column(name = "DESCRIPTION")

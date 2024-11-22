@@ -15,6 +15,7 @@ import java.util.Date;
 @NoArgsConstructor
 public class TaskDTO {
     private Long taskId;
+    private Long userId;
     @Size(max = 225, message = "Title must not exceed 225 characters")
     @NotBlank(message = "Title cannot be blank")
     private String title;
@@ -34,4 +35,5 @@ public class TaskDTO {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private Integer statusId;
     private String status;
+    private String userName;
 }
