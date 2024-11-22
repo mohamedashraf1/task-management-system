@@ -3,6 +3,7 @@ package banquemisr.challenge05.config;
 import banquemisr.challenge05.filter.AuthenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -21,6 +22,7 @@ public class AuthConfig {
                 .cors(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers(HttpMethod.PUT, "/user/**").hasAnyAuthority("admin", "user")
                         .requestMatchers("/user/**").hasAuthority("admin")
                         .requestMatchers("/task/**").hasAnyAuthority("admin", "user")
                         .anyRequest().authenticated())

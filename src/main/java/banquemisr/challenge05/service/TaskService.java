@@ -3,7 +3,6 @@ package banquemisr.challenge05.service;
 import banquemisr.challenge05.dto.TaskDTO;
 import banquemisr.challenge05.entity.LoTaskStatus;
 import banquemisr.challenge05.entity.Task;
-import banquemisr.challenge05.entity.User;
 import banquemisr.challenge05.repo.LoTaskStatusRepo;
 import banquemisr.challenge05.repo.TaskRepo;
 import banquemisr.challenge05.repo.UserRepo;
@@ -11,7 +10,12 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+
+import static banquemisr.challenge05.util.Util.getLoggedUserId;
+import static banquemisr.challenge05.util.Util.mapList;
 
 @Service
 public class TaskService {
@@ -32,6 +36,7 @@ public class TaskService {
         Task task = modelMapper.map(taskDTO, Task.class);
         task.setTaskId(null);
         task.setStatus(taskStatus.get());
+        task.setUserId(getLoggedUserId());
 
         return taskRepo.save(task).getTaskId();
     }
@@ -44,10 +49,17 @@ public class TaskService {
 
         taskDTO = modelMapper.map(task, TaskDTO.class);
 
-        Optional<User> user = userRepo.findById(task.getUserId());
-        user.ifPresent(value -> taskDTO.setUserName(value.getName()));
+        if(Objects.equals(task.getUserId(), getLoggedUserId())){
+            return taskDTO;
+        }else{
+            return null;
+        }
+    }
 
-        return taskDTO;
+    public List<TaskDTO> getAllTasks(){
+        List<Task> tasks = taskRepo.findByUserId(getLoggedUserId());
+
+        return mapList(tasks, TaskDTO.class);
     }
 
     public void deleteTask(Long taskId){
@@ -55,7 +67,6 @@ public class TaskService {
     }
 
     public TaskDTO updateTask(TaskDTO taskDTO){
-        TaskDTO newTaskDto;
         if(taskDTO.getTaskId() == null)
             return null;
 
@@ -67,17 +78,17 @@ public class TaskService {
         if(taskStatus.isEmpty())
             throw new RuntimeException("this is not a valid status");
 
-        Optional<User> user = userRepo.findById(task.getUserId());
+        if(Objects.equals(task.getUserId(), getLoggedUserId())){
+            task = modelMapper.map(taskDTO, Task.class);
 
-        task = modelMapper.map(taskDTO, Task.class);
-        task.setStatus(taskStatus.get());
+            task.setStatus(taskStatus.get());
+            task.setUserId(getLoggedUserId())
+            ;
+            task = taskRepo.save(task);
 
-        task.setUserId(user.get().getUserId());
-        task = taskRepo.save(task);
-
-        newTaskDto = modelMapper.map(task, TaskDTO.class);
-        user.ifPresent(value -> newTaskDto.setUserName(value.getName()));
-
-        return newTaskDto;
+            return modelMapper.map(task, TaskDTO.class);
+        }else {
+            return null;
+        }
     }
 }

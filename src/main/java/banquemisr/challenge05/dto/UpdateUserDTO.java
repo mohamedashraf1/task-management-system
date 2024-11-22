@@ -9,8 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserDataDTO {
-    private Long userId;
+public class UpdateUserDTO {
     @NotBlank(message = "name cannot be blank")
     private String name;
     @NotBlank(message = "mobile number cannot be blank")
