@@ -8,7 +8,6 @@ import banquemisr.challenge05.entity.Task;
 import banquemisr.challenge05.errorhandling.BusinessException;
 import banquemisr.challenge05.repo.LoTaskStatusRepo;
 import banquemisr.challenge05.repo.TaskRepo;
-import banquemisr.challenge05.repo.UserRepo;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -66,7 +65,7 @@ public class TaskService {
         if(task.isEmpty() || !Objects.equals(task.get().getUserId(), getLoggedUserId()))
             throw new BusinessException("Task not found");
 
-        taskRepo.deleteByTaskIdAndUserId(taskId, getLoggedUserId());
+        taskRepo.deleteById(taskId);
     }
 
     public TaskDTO updateTask(TaskDTO taskDTO){

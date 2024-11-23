@@ -26,7 +26,7 @@ public class TaskDTO {
     @NotNull(message = "priority cannot be blank")
     private Integer priority;
     @NotNull(message = "Due Date cannot be blank")
-    @JsonFormat(pattern = "dd-MM-yyyy")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy", timezone="GMT+2")
     private Date dueDate;
     @Min(value = 1, message = "This is not a valid status")
     @Max(value = 3, message = "This is not a valid status")

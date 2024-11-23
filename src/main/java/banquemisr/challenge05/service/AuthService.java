@@ -61,7 +61,7 @@ public class AuthService {
         if(user == null)
             throw new BusinessException("User not found");
 
-        Role r = roleRepo.findById(2L).orElseThrow();
+        Role r = roleRepo.findById(Constant.ADMIN_ROLE).orElseThrow();
         List<Role> roles = new ArrayList<>();
         roles.add(r);
         user.setRoles(roles);
