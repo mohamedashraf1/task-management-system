@@ -1,0 +1,513 @@
+{
+	"info": {
+		"_postman_id": "0b8809ab-1f33-4062-b135-66dc2ef7e43a",
+		"name": "Task management",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "38541781",
+		"_collection_link": "https://iopharma.postman.co/workspace/Team-Workspace~cdc8eb57-3442-4e43-8ee6-3ed3d7169ede/collection/38541781-0b8809ab-1f33-4062-b135-66dc2ef7e43a?action=share&source=collection_link&creator=38541781"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "refresh-token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var response = JSON.parse(pm.response.text());\r",
+									"\r",
+									"pm.environment.set(\"accessToken\", \"Bearer \" + response.accessToken);\r",
+									"\r",
+									"pm.environment.set(\"refreshToken\", \"Bearer \" + response.refreshToken);\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"refreshToken\" : \"eyJhbGciOiJIUzUxMiJ9.eyJ1c2VySWQiOiIxIiwic3ViIjoiMSIsImlhdCI6MTczMjMwMTA2NywiZXhwIjoxNzMyMzI5ODY3fQ.Z9UaGBLp8SaBJNIsXWb08JFEtAKnZ6aKDm54b3ZsOaXBKHPGNOiLVJ5LoMdTou_EEW4HOSH_asYVT9Mwjbu6Mw\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:7020/auth/refresh-token",
+							"host": [
+								"localhost"
+							],
+							"port": "7020",
+							"path": [
+								"auth",
+								"refresh-token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var response = JSON.parse(pm.response.text());\r",
+									"\r",
+									"pm.environment.set(\"accessToken\", \"Bearer \" + response.accessToken);\r",
+									"\r",
+									"pm.environment.set(\"refreshToken\", \"Bearer \" + response.refreshToken);\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\" : \"mo@gmail.com\",\r\n    \"password\" : \"123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:7020/auth/login",
+							"host": [
+								"localhost"
+							],
+							"port": "7020",
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "sign-up",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"mo2@gmail.com\",\r\n    \"password\": \"123\",\r\n    \"name\" : \"momen\",\r\n    \"mobileNumber\": \"01093150215\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:7020/auth/sign-up",
+							"host": [
+								"localhost"
+							],
+							"port": "7020",
+							"path": [
+								"auth",
+								"sign-up"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "make admin",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "localhost:7020/user/admin?userId=2",
+							"host": [
+								"localhost"
+							],
+							"port": "7020",
+							"path": [
+								"user",
+								"admin"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete user",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:7020/user?userId=1",
+							"host": [
+								"localhost"
+							],
+							"port": "7020",
+							"path": [
+								"user"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update user",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\" : \"momen muns\",\r\n    \"mobileNumber\": \"01114950910\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:7020/user",
+							"host": [
+								"localhost"
+							],
+							"port": "7020",
+							"path": [
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get user",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:7020/user?userId=2",
+							"host": [
+								"localhost"
+							],
+							"port": "7020",
+							"path": [
+								"user"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get all users",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:7020/user",
+							"host": [
+								"localhost"
+							],
+							"port": "7020",
+							"path": [
+								"user"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Tasks",
+			"item": [
+				{
+					"name": "update task",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"taskId\": 10,\r\n    \"title\": \"mohame\",\r\n    \"description\": \"this is a test\",\r\n    \"priority\": 1,\r\n    \"dueDate\" : \"23-11-2024\",\r\n    \"statusId\": 3\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:7020/task",
+							"host": [
+								"localhost"
+							],
+							"port": "7020",
+							"path": [
+								"task"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete task",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:7020/task?taskId=2",
+							"host": [
+								"localhost"
+							],
+							"port": "7020",
+							"path": [
+								"task"
+							],
+							"query": [
+								{
+									"key": "taskId",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get all tasks",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:7020/task",
+							"host": [
+								"localhost"
+							],
+							"port": "7020",
+							"path": [
+								"task"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get task",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:7020/task?taskId=3",
+							"host": [
+								"localhost"
+							],
+							"port": "7020",
+							"path": [
+								"task"
+							],
+							"query": [
+								{
+									"key": "taskId",
+									"value": "3"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "add task",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"mohaemd\",\r\n    \"description\": \"this is a test\",\r\n    \"priority\": 1,\r\n    \"dueDate\" : \"25-11-2024\",\r\n    \"statusId\": 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:7020/task",
+							"host": [
+								"localhost"
+							],
+							"port": "7020",
+							"path": [
+								"task"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "search",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    // \"title\": \"bank\",\r\n    // \"description\": \"bank\",\r\n    // \"priority\": 1,\r\n    \"dueDate\" : \"25-11-2024\"\r\n    // \"statusId\": 3\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:7020/task/search",
+							"host": [
+								"localhost"
+							],
+							"port": "7020",
+							"path": [
+								"task",
+								"search"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
